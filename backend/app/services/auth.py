@@ -1,4 +1,4 @@
-# Update your backend/app/services/auth.py with debug logging
+# Update your backend/app/services/auth.py - Fix the token creation
 
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
@@ -39,8 +39,8 @@ def authenticate(db: Session, email: str, password: str) -> tuple[str, User]:
     
     print("✅ DEBUG: Password verified successfully")
     
-    # Create token with user ID as 'sub'
-    token_data = {"sub": user.id}
+    # FIX: Convert user ID to string for JWT 'sub' field
+    token_data = {"sub": str(user.id)}
     print(f"🔍 DEBUG: Creating token with data: {token_data}")
     
     token = create_access_token(token_data)
