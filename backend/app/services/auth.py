@@ -1,3 +1,5 @@
+# Update your backend/app/services/auth.py with debug logging
+
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 
@@ -17,12 +19,31 @@ def create_user(db: Session, user_in: UserCreate) -> User:
     db.add(user)
     db.commit()
     db.refresh(user)
+    print(f"✅ DEBUG: Created user with ID: {user.id}, email: {user.email}")
     return user
 
 
 def authenticate(db: Session, email: str, password: str) -> tuple[str, User]:
     user = db.query(User).filter(User.email == email).first()
-    if not user or not verify_password(password, user.hashed_password):
+    print(f"🔍 DEBUG: Looking for user with email: {email}")
+    
+    if not user:
+        print("❌ DEBUG: User not found")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email or password")
-    token = create_access_token({"sub": user.id})
+    
+    print(f"🔍 DEBUG: Found user: ID={user.id}, email={user.email}, active={user.is_active}")
+    
+    if not verify_password(password, user.hashed_password):
+        print("❌ DEBUG: Password verification failed")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email or password")
+    
+    print("✅ DEBUG: Password verified successfully")
+    
+    # Create token with user ID as 'sub'
+    token_data = {"sub": user.id}
+    print(f"🔍 DEBUG: Creating token with data: {token_data}")
+    
+    token = create_access_token(token_data)
+    print(f"🔍 DEBUG: Created token: {token}")
+    
     return token, user
