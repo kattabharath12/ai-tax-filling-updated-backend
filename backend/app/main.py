@@ -40,6 +40,23 @@ app.include_router(forms.router)
 app.include_router(payments.router)
 app.include_router(tax_engine.router)
 
+# ADD THIS NEW SECTION HERE ⬇️
+@app.get("/")
+def read_root():
+    return {
+        "message": "Tax Engine API is running successfully!",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "health": "/health",
+        "endpoints": {
+            "auth": "/api/auth",
+            "documents": "/api/documents", 
+            "forms": "/api/forms",
+            "payments": "/api/payments",
+            "tax_engine": "/api/tax-engine"
+        }
+    }
+# END OF NEW SECTION ⬆️
 
 @app.get("/health")
 def health():
