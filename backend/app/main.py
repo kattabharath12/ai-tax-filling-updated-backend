@@ -22,8 +22,11 @@ app = FastAPI(
 )
 
 origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "https://ai-tax-filling-updated-frontent-production.up.railway.app",  # Your frontend
+    "https://ai-tax-filling-updated-backend-production.up.railway.app",   # Your backend
+    "http://localhost:3000",     # Local development
+    "http://127.0.0.1:3000",    # Local development
+    "http://localhost:8000",     # Local backend
 ]
 app.add_middleware(
     CORSMiddleware,
